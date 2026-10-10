@@ -160,6 +160,24 @@ after(() => {
   if (tmp) rmSync(tmp, { recursive: true, force: true });
 });
 
+test('Markdown downloads preserve UTF-8 and require a session and a project-contained path', async () => {
+  const floor = office.floors()[0].id;
+  const url = `/api/docs/download?floor=${floor}&path=README.md`;
+  assert.notEqual((await get(url)).status, 200);
+  const login = await post('/api/login', { password: PASSWORD }, { origin: base });
+  const headers = { cookie: login.headers.get('set-cookie')!.split(';')[0] };
+  const text = '# Article\n\nTangerang — selesai ✅\n';
+  writeFileSync(path.join(tmp, 'project', 'hasil artikel.md'), text);
+  const response = await get(`/api/docs/download?floor=${floor}&path=hasil%20artikel.md`, headers);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'text/markdown; charset=utf-8');
+  assert.equal(response.headers.get('content-disposition'), "attachment; filename*=UTF-8''hasil%20artikel.md");
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()), Buffer.from(text, 'utf8'));
+  assert.equal((await get(`/api/docs/download?floor=${floor}&path=../outside.md`, headers)).status, 415);
+  assert.equal((await get(`/api/docs/download?floor=${floor}&path=config.json`, headers)).status, 415);
+  assert.equal((await get(`/api/docs/download?floor=${floor}&path=missing.md`, headers)).status, 404);
+});
+
 test('answers the open routes before anyone signs in', async () => {
   const health = await get('/api/health');
   assert.equal(health.status, 200);

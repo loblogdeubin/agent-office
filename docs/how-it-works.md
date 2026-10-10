@@ -58,3 +58,8 @@ Anyone who can sign in can drive Claude Code, OpenCode, Codex, Grok, Muse, DeepS
 - Workers don't inherit the office password or any parent agent-session variables.
 - Workers hired by an account run on that account's own sign-ins (`CLAUDE_CONFIG_DIR`, `GH_CONFIG_DIR` and `GIT_CONFIG_GLOBAL` under `.agent-office/homes/<account>/`), and never see the machine's own Claude or GitHub credentials (`ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `GH_TOKEN` and the like are taken out of their environment). But every worker runs as the same OS user, so one person's worker *can* read another person's folder. Per-person sign-ins keep work attributed and plans separate. They don't keep teammates' secrets from each other.
 - The picture fetcher (`/api/image`) needs an office session. It fetches any http(s) link it's given, from the office's machine. That gives nobody new reach: anyone signed in can already run `curl` from a shell worker. Pictures are served with a sandboxing `Content-Security-Policy`, so an SVG can't run script on the office's origin.
+
+
+### Download a Markdown result
+
+A signed-in teammate can download a project Markdown file with `/api/docs/download?floor=FLOOR_ID&path=ENCODED_PROJECT_RELATIVE_PATH`. The endpoint returns the original UTF-8 text as a `.md` attachment and uses the bookshelf's size and checkout containment checks. Workers can print a full office URL in their final terminal response; clicking it downloads the file using the browser's office session. An OS path alone is not a browser download.
