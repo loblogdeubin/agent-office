@@ -122,6 +122,23 @@ export const fileRoutes = {
         const r = await floor.docs.read(file);
         return 'error' in r ? send(res, r.status, { error: r.error }) : send(res, 200, r);
       }
+      if (p === '/api/docs/download') {
+        const r = await floor.docs.read(file);
+        if ('error' in r) return send(res, r.status, { error: r.error });
+        const body = Buffer.from(r.text, 'utf8');
+        const name = encodeURIComponent(file.split('/').pop()!).replace(/['()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+        res.writeHead(200, {
+          'content-type': 'text/markdown; charset=utf-8',
+          'content-length': String(body.length),
+          'content-disposition': `attachment; filename*=UTF-8''${name}`,
+          'cache-control': 'no-store',
+          'x-content-type-options': 'nosniff',
+          'content-security-policy': "default-src 'none'; sandbox",
+          'cross-origin-resource-policy': 'same-origin',
+        });
+        res.end(body);
+        return;
+      }
       if (p === '/api/docs/picture') {
         const r = await floor.docs.picture(file);
         if ('error' in r) return send(res, r.status, { error: r.error });

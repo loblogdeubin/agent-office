@@ -420,3 +420,8 @@ Every change to the app that lands on `main` is published as a GitHub release by
 ## License
 
 [MIT](LICENSE)
+
+
+### Download a Markdown result
+
+A signed-in teammate can download a project Markdown file with `/api/docs/download?floor=FLOOR_ID&path=ENCODED_PROJECT_RELATIVE_PATH`. The endpoint returns the original UTF-8 text as a `.md` attachment and uses the bookshelf's size and checkout containment checks. Workers can print a full office URL in their final terminal response; clicking it downloads the file using the browser's office session. An OS path alone is not a browser download.
