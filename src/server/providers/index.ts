@@ -2,6 +2,7 @@
 // and its entry in shared/providers.ts.
 import type { AgentProvider } from '../../shared/providers.js';
 import { claude } from './claude.js';
+import { chatgpt } from './chatgpt.js';
 import { codex } from './codex.js';
 import { cursor } from './cursor.js';
 import { custom } from './custom.js';
@@ -15,6 +16,7 @@ import type { SomeAdapter } from './types.js';
 export type { LaunchPlan, ProviderAdapter, ProviderFloor, SomeAdapter } from './types.js';
 
 export const PROVIDERS: Record<AgentProvider, SomeAdapter> = {
+  chatgpt,
   claude,
   opencode,
   codex,

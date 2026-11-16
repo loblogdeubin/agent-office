@@ -4,7 +4,7 @@
 //
 // Browser-safe: no node imports, the hire dialog reads this too.
 
-export const AGENT_PROVIDERS = ['claude', 'opencode', 'codex', 'grok', 'muse', 'dsh', 'pi', 'cursor', 'custom'] as const;
+export const AGENT_PROVIDERS = ['claude', 'opencode', 'codex', 'grok', 'muse', 'dsh', 'pi', 'cursor', 'chatgpt', 'custom'] as const;
 
 export type AgentProvider = (typeof AGENT_PROVIDERS)[number];
 
@@ -184,6 +184,13 @@ export interface ProviderMeta {
 }
 
 export const PROVIDER_META: Record<AgentProvider, ProviderMeta> = {
+  chatgpt: {
+    label: 'ChatGPT browser relay',
+    name: 'ChatGPT browser relay',
+    bin: 'node',
+    unpicked: 'First task: exact ChatGPT conversation URL. Pair this worker in the local Chrome extension. Chrome and the signed-in chat tab must stay open.',
+    usage: { note: 'Browser conversation; usage and cost are not reported. No API or model fallback.' },
+  },
   claude: {
     label: 'Claude Code',
     name: 'Claude Code',

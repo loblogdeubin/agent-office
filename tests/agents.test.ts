@@ -110,8 +110,8 @@ test('reasoning effort joins Claude for DeepSeek Harness', () => {
 test('every provider the office knows the CLI of takes a model and (but for Cursor) an effort, with the fields to pick them', () => {
   for (const provider of AGENT_PROVIDERS) {
     const meta = PROVIDER_META[provider];
-    if (provider === 'custom') {
-      // A custom --agent is run as it is: the hire dialog says where its model comes from instead.
+    if (provider === 'custom' || provider === 'chatgpt') {
+      // These run as configured: no Office model or effort override.
       assert.equal(meta.validModel, undefined);
       assert.equal(meta.takesEffort, undefined);
       assert.ok(meta.unpicked);

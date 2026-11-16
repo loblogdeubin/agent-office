@@ -92,6 +92,8 @@ agent-office setup                          # the first-start walkthrough again 
 
 Every option is in [docs/configuration.md](docs/configuration.md). Choosing models and providers per worker is in [docs/agents.md](docs/agents.md).
 
+An existing ChatGPT conversation can be paired with a **ChatGPT browser relay** worker using the local Chrome extension. This is text-only browser automation, not an API integration. Chrome, the Office tab and the signed-in conversation must remain open. See [local relay setup and limitations](docs/chatgpt-browser-relay.md).
+
 To run it from a clone instead:
 
 ```bash
