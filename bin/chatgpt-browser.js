@@ -20,6 +20,11 @@ export function createRelay({ input, output, url, timeoutMs = 180000, announceMs
   url = conversationUrl(url);
   let buffer = '';
   let overflow = false;
+  let pasted = false;
+  let skipLF = false;
+  let control = '';
+  let replyBuffer;
+  let replyOverflow = false;
   let pending;
   const decoder = new StringDecoder('utf8');
   if (input.isTTY) input.setRawMode(true);
@@ -60,30 +65,57 @@ export function createRelay({ input, output, url, timeoutMs = 180000, announceMs
     status('working');
     announce();
   };
+  const userInput = (c) => {
+    if (skipLF && c === '\n') { skipLF = false; return; }
+    skipLF = c === '\r';
+    if ((c === '\x7f' || c === '\b') && input.isTTY && !pasted) {
+      if (buffer) output.write('\b \b');
+      buffer = buffer.slice(0, -1);
+    } else if (!pasted && (c === '\n' || c === '\r')) {
+      if (input.isTTY && buffer) output.write('\n');
+      if (!overflow) line(buffer);
+      else print('Input exceeded the relay limit; not sent.');
+      buffer = ''; overflow = false;
+    } else if (!overflow) {
+      if (c < ' ' && c !== '\n' && c !== '\r' && c !== '\t') return;
+      buffer += c === '\r' ? '\n' : c;
+      if (input.isTTY && c >= ' ') output.write(c);
+      if (buffer.length > 20000) { buffer = ''; overflow = true; }
+    }
+  };
+  const markers = ['\x1b[200~', '\x1b[201~', '@rekah-chatgpt:'];
   const onData = (chunk) => {
     for (const c of decoder.write(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))) {
       if (c === '\x03' && input.isTTY) { close(); input.pause(); return; }
-      if ((c === '\x7f' || c === '\b') && input.isTTY) {
-        if (buffer && !buffer.startsWith('@')) output.write('\b \b');
-        buffer = buffer.slice(0, -1);
-      } else if (c === '\n' || c === '\r') {
-        if (input.isTTY && buffer && !buffer.startsWith('@')) output.write('\n');
-        if (!overflow) line(buffer);
-        else print('Input exceeded the relay limit; not sent.');
-        buffer = ''; overflow = false;
-      } else if (!overflow) {
-        buffer += c;
-        if (input.isTTY && !buffer.startsWith('@') && c >= ' ') output.write(c);
-        if (buffer.length > 180000) { buffer = ''; overflow = true; }
+      if (replyBuffer !== undefined) {
+        if (c === '\r' || c === '\n') {
+          if (!replyOverflow) line(replyBuffer);
+          replyBuffer = undefined; replyOverflow = false; skipLF = c === '\r';
+        } else if (!replyOverflow) {
+          replyBuffer += c;
+          if (replyBuffer.length > 180000) { replyBuffer = ''; replyOverflow = true; }
+        }
+        continue;
+      }
+      control += c;
+      while (control && !markers.some((marker) => marker.startsWith(control))) {
+        userInput(control[0]);
+        control = control.slice(1);
+      }
+      if (control === markers[0] || control === markers[1]) {
+        pasted = control === markers[0]; control = ''; skipLF = false;
+      } else if (control === markers[2]) {
+        replyBuffer = control; control = '';
       }
     }
   };
   input.on('data', onData);
   const close = () => {
     finish(); input.off('data', onData); input.off('end', close);
-    if (input.isTTY) input.setRawMode(false);
+    if (input.isTTY) { output.write('\x1b[?2004l'); input.setRawMode(false); }
   };
   input.on('end', close);
+  if (input.isTTY) output.write('\x1b[?2004h');
   print(`ChatGPT browser relay: ${url}\nPair this worker in the local Chrome extension. Text only; no API/model fallback.`);
   status('needs_input');
   return { close };

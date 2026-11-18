@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Office ChatGPT Local Relay",
-  "version": "0.1.0",
-  "description": "Text-only relay between one paired Office worker and an existing signed-in ChatGPT tab.",
+  "version": "0.3.0",
+  "description": "Local text and photo relay between one paired Office worker and its signed-in ChatGPT tab.",
   "permissions": ["storage"],
   "host_permissions": ["https://kantor.rekah.id/*", "https://chatgpt.com/*"],
   "background": {"service_worker": "background.js", "type": "module"},
   "options_page": "options.html",
   "action": {"default_title": "Configure Office ChatGPT relay"},
   "content_scripts": [
-    {"matches": ["https://kantor.rekah.id/*"], "js": ["office.js"]},
+    {"matches": ["https://kantor.rekah.id/*"], "js": ["image-composer.js", "office.js"], "run_at": "document_start"},
     {"matches": ["https://chatgpt.com/c/*"], "js": ["chat.js"]}
   ]
 }

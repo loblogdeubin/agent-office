@@ -29,5 +29,5 @@ export function frameReader() {
 export function deliveryDecision(request, pair, ledger) {
   if (!validRequest(request) || request.url !== pair?.url) return 'reject';
   const old = ledger[request.id];
-  return old?.reply ? 'cached' : old ? 'uncertain' : 'send';
+  return old?.reply ? 'cached' : old?.state === 'completed' ? 'expired' : old ? 'uncertain' : 'send';
 }

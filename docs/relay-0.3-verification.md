@@ -1,0 +1,35 @@
+# Relay 0.3.0 verification, 18 November 2026
+
+- 42 focused relay, composer, provider, and size tests passed.
+- Typecheck and production build passed.
+- The live paired ChatGPT page displayed the Work usage limit, with its previous photo and question still unsent. The quota detector matched that visible heading.
+- The new Ctrl+V upload and Enter flow has not completed an authenticated live round trip; no photo or question was resent.
+- The full npm test command was interrupted after the following 27 observed failures. These were also recorded in the earlier relay verification; their root causes have not been established here, and the full suite is not claimed green.
+
+- ✖ a file outside the checkout, by .. or by a link, is refused (478.9651ms)
+- ✖ InteractKind is the kinds added to InteractKinds, and world/types.ts adds none itself (805.3261ms)
+- ✖ every kind of thing you can use has exactly one definition, in the file that adds the kind, and nothing else is defined (1039.8613ms)
+- ✖ a clone shows how far along it is, then becomes a floor (1893.6789ms)
+- ✖ a clone that goes quiet is stopped as stalled, and one that can't sign in says why (8050.9532ms)
+- ✖ a clone can be stopped by an admin or whoever added it (7523.2574ms)
+- ✖ a restart mid-clone picks the clone back up, and it becomes its floor (6649.6218ms)
+- ✖ a clone that finished while no office was watching becomes its floor at the next start (6687.8765ms)
+- ✖ a clone that was cut off isn't taken for a checkout (407.8043ms)
+- ✖ rejects foreign session metadata, outside paths and symlink escapes (11.2611ms)
+- ✖ the patch keeps the floor DSH sessions under the office, and argv puts the profile last (36.2963ms)
+- ✖ a session initializes, creates one, and applies the model and effort it was given (143.0687ms)
+- ✖ a stale saved model degrades to the profile default instead of failing the launch (123.2939ms)
+- ✖ a prompt works, raises needs_input on a permission request, and answers it from the terminal (204.4716ms)
+- ✖ Escape cancels a turn that is waiting on a person (170.4571ms)
+- ✖ Escape rejects an approval, and an empty Enter allows once, the way the harness binds them (437.7189ms)
+- ✖ Enter never grants more than allow once, and a pasted blank line answers nothing (342.8708ms)
+- ✖ the office prompt and typed keys are echoed without escape sequences (201.9684ms)
+- ✖ an approval with no reject choice is cancelled when Escape is pressed (188.5443ms)
+- ✖ a restart resumes the session the agent remembers, and falls back when it cannot (450.1449ms)
+- ✖ a fresh hire starts its own session, never the newest one another desk left in the checkout (387.3047ms)
+- ✖ a second prompt while one is running is refused, not queued silently (185.5259ms)
+- ✖ a line typed into the terminal is echoed, submitted as one prompt, and reported to the office (262.5415ms)
+- ✖ the office hires a DSH worker over ACP, and its desk shows the work (7405.4844ms)
+- ✖ a DSH worker comes back offline after a restart, then resumes its session (6207.7061ms)
+- ✖ a DSH board agent proves itself with its token, and a second question goes to its running session (5906.5058ms)
+- ✖ a DSH terminal fits the window it is shown in, though the agent has no size (6272.9111ms)

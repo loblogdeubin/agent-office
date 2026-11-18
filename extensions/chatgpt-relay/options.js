@@ -2,10 +2,11 @@ import { validRequest } from './protocol.js';
 const form = document.querySelector('form');
 const status = document.querySelector('#status');
 const { pair } = await chrome.storage.local.get('pair');
-if (pair) { form.elements.worker.value = pair.worker; form.elements.url.value = pair.url; }
+if (pair) { form.elements.worker.value = pair.worker; form.elements.url.value = pair.url; form.elements.floor.value = pair.floor ?? ''; }
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const pair = { worker: form.elements.worker.value.trim(), url: form.elements.url.value.trim() };
+  const floor = form.elements.floor.value.trim();
+  const pair = { worker: form.elements.worker.value.trim(), url: form.elements.url.value.trim(), ...(floor ? { floor } : {}) };
   if (!/^[a-f0-9]{12}$/.test(pair.worker) || !validRequest({ id: '00000000-0000-0000-0000-000000000000', prompt: 'test', url: pair.url })) {
     status.textContent = 'Use a 12-character worker ID and exact https://chatgpt.com/c/... URL.'; return;
   }
