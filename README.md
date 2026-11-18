@@ -92,6 +92,8 @@ agent-office setup                          # the first-start walkthrough again 
 
 Every option is in [docs/configuration.md](docs/configuration.md). Choosing models and providers per worker is in [docs/agents.md](docs/agents.md).
 
+An existing ChatGPT conversation can be paired with a **ChatGPT browser relay** worker using the local Chrome extension. Paste one PNG/JPEG/WebP photo up to 5 MiB into its terminal to attach it to the paired ChatGPT composer, then enter a question and press Enter to send. Chrome, the Office tab and the signed-in conversation must remain open. Work usage limits stop the relay with a specific error; existing drafts are preserved and messages are never automatically resent. See [local relay setup and limitations](docs/chatgpt-browser-relay.md).
+
 To run it from a clone instead:
 
 ```bash

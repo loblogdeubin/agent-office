@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Office ChatGPT relay</title></head>
+<body>
+  <h1>Pair one Office worker</h1>
+  <p>Keep one Office tab and the signed-in ChatGPT conversation open. Text and explicitly sent photos are forwarded. No cookies are copied.</p>
+  <form id="pair">
+    <p><label>Worker ID <input name="worker" required pattern="[a-f0-9]{12}" maxlength="12"></label></p>
+    <p><label>Office floor ID <input name="floor" maxlength="64"></label> Required when Office has more than one floor. Copy the floor ID from the Office WebSocket URL; leave blank only for a single-floor Office.</p>
+    <p><label>ChatGPT conversation URL <input name="url" type="url" required size="80"></label></p>
+    <button type="submit">Save pairing</button>
+    <button id="disconnect" type="button">Disconnect</button>
+  </form>
+  <p id="status" role="status"></p>
+  <p>Messages and replies will be visible to people who can view this worker's Office terminal.</p>
+  <script type="module" src="options.js"></script>
+</body></html>
